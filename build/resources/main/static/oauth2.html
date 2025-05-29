@@ -1,0 +1,100 @@
+<!-- src/main/resources/static/oauth2.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>OAuth2 Test</title>
+    <!-- Vue 3 + Axios CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <!-- 로그인 전 -->
+    <button v-if="!isLoggedIn" @click="loginWithGoogle">
+<!--        🔐 Google 로그인-->
+        <img src="/images/web_light_rd_ctn@1x.png" alt="google Image">
+    </button>
+
+    <br>
+
+    <button v-if="!isLoggedIn" @click="loginWithKakao">
+<!--        🔐 KaKao 로그인-->
+        <img src="/images/kakao_login_medium_narrow.png" alt="My Image">
+    </button>
+
+
+    <!-- 로그인 후 -->
+    <div v-else>
+        <p>👋 안녕하세요, {{ user.name }}</p>
+        <p>이메일: {{ user.email }}</p>
+        <button @click="callProtected">보호된 API 호출</button>
+        <pre v-if="protected">{{ protected }}</pre>
+    </div>
+
+    <!-- 에러 처리 -->
+    <p v-if="error" style="color: red">{{ error }}</p>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                isLoggedIn: false,
+                user: {},
+                protected: null,
+                error: null,
+            };
+        },
+        methods: {
+            // 1) 구글 OAuth2 로그인 시작
+            loginWithGoogle() {
+                // 여기는 스프링 시큐리티가 열어둔 엔드포인트
+                window.location.href = '/oauth2/authorization/google';
+            },
+            // 1) 구글 OAuth2 로그인 시작
+            loginWithKakao() {
+                // 여기는 스프링 시큐리티가 열어둔 엔드포인트
+                window.location.href = '/oauth2/authorization/kakao';
+            },
+
+            // 2) 로그인 성공(혹은 에러) 후 이 앱으로 리다이렉트됐다고 가정
+            async fetchProfile() {
+                try {
+                    // 쿠키 기반 인증: withCredentials 가 반드시 필요합니다
+                    const res = await axios.get('/auth/api/me', {
+                        withCredentials: true
+                    });
+                    this.user = res.data;
+                    this.isLoggedIn = true;
+                } catch (e) {
+                    this.isLoggedIn = false;
+                    // 만약 redirect 시 ?error 가 붙어왔다면
+                    if (window.location.search.includes('error')) {
+                        this.error = 'OAuth2 인증에 실패했습니다.';
+                    }
+                }
+            },
+
+            // 3) 보호된 API 를 호출해 보기
+            async callProtected() {
+                try {
+                    const res = await axios.get('/auth/api/protected', {
+                        withCredentials: true
+                    });
+                    this.protected = JSON.stringify(res.data, null, 2);
+                } catch (e) {
+                    this.protected = `Error ${e.response.status}: ${e.response.data}`;
+                }
+            }
+        },
+        mounted() {
+            // 페이지 로드 시 곧바로 프로필 확인 → 로그인 여부 판단
+            this.fetchProfile();
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>

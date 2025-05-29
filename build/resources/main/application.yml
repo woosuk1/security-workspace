@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: securitydemo
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+#      username: bockerl
+#      password: bockerl
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/securitydemo
+    username: bockerl
+    password: bockerl
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 70346822131-kns5p6lsu3sr5gu10a3188bu0sg331ik.apps.googleusercontent.com
+            client-secret: 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
+            provider: google
+            authorization-grant-type: authorization_code
+#            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+          kakao:
+            client-id: dbf17d95e7c3851cdcca6b29234b92e5
+            client-secret: I8nQLPSutIECJwjEpfDxNAbNySFevMkm
+            provider: kakao
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+#            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - account_email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri:         https://oauth2.googleapis.com/token
+            user-info-uri:     https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri:         https://kauth.kakao.com/oauth/token
+            user-info-uri:     https://kapi.kakao.com/v2/user/me
+            user-name-attribute: sub
+            jwk-set-uri:       https://kauth.kakao.com/.well-known/jwks.json
+
+jwt:
+  access-token-validity-seconds: 3600
+  refresh-token-validity-seconds: 2592000
+  secret: "6541c31335e9c2c77d1f57166d3ddc744fde15a340fd55fa43"
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          DEBUG
+        web:
+          filter: debug

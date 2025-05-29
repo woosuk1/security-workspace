@@ -1,0 +1,28 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    &lt;!&ndash; CSRF 토큰을 메타태그로 심어 줍니다 &ndash;&gt;-->
+<!--    <meta name="_csrf"       th:content="${_csrf.token}"/>-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+
+<!--    &lt;!&ndash; SPA 번들 스크립트 등 &ndash;&gt;-->
+<!--    <script src="/static/app.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="root"></div>-->
+<!--</body>-->
+<!--</html>-->
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+<!--    <meta name="_csrf"       th:content="${_csrf.token}"/>-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+    <title>My App</title>
+</head>
+<body>
+<div id="root"></div>
+<script src="/app.js"></script>
+</body>
+</html>

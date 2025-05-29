@@ -1,0 +1,81 @@
+spring:
+  application:
+    name: securitydemo
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+#      username: ${DATABASE_USERNAME}
+#      password: ${DATABASE_PASSWORD}
+
+  datasource:
+    url: ${POSTGRESQL_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            provider: google
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            provider: kakao
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - account_email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri:         https://oauth2.googleapis.com/token
+            user-info-uri:     https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri:         https://kauth.kakao.com/oauth/token
+            user-info-uri:     https://kapi.kakao.com/v2/user/me
+            user-name-attribute: sub
+            jwk-set-uri:       https://kauth.kakao.com/.well-known/jwks.json
+
+jwt:
+  access-token-validity-seconds: 3600
+  refresh-token-validity-seconds: 2592000
+  secret: ${JWT_SECRET}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          DEBUG
+        web:
+          filter: debug
