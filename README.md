@@ -10,6 +10,8 @@
 4. 로그아웃(Redis 리프레시 토큰 삭제 + 쿠키 만료)
 5. 회원가입
 
+![image](https://github.com/user-attachments/assets/1ecf6249-4ea6-4555-9f9e-37a51a5d9c82)
+
 ---
 
 인증·인가 구조
